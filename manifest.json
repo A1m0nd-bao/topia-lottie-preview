@@ -42,12 +42,6 @@
         "生成完成动效（重",
         "强视觉）"
       ]
-    },
-    {
-      "name": "sample-loader",
-      "file": "./lotties/sample-loader.json",
-      "category": "未分类",
-      "tags": []
     }
   ]
 }
