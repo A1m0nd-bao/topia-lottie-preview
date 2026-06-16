@@ -1,0 +1,16 @@
+{
+  "spreadsheetUrl": "https://your-domain.feishu.cn/sheets/shtxxxxxxxx",
+  "sheetId": "",
+  "range": "A1:H200",
+  "headerRow": 1,
+  "identity": "user",
+  "pollSeconds": 30,
+  "columns": {
+    "name": "名称",
+    "category": "分类",
+    "tags": "标签",
+    "file": ["JSON文件", "附件1", "附件2"]
+  },
+  "outputDir": "lotties",
+  "stateFile": ".sync/lark-state.json"
+}

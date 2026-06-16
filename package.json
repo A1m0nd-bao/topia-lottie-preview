@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "manifest": "node ./scripts/generate-manifest.mjs",
+    "sync:once": "node ./scripts/lark-sync.mjs",
+    "sync:watch": "node ./scripts/lark-sync.mjs --watch",
+    "start": "python3 -m http.server 4173"
+  }
+}

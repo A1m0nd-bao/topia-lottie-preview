@@ -1,0 +1,53 @@
+{
+  "items": [
+    {
+      "name": "形象加载区域",
+      "file": "./lotties/Loci-形象更换加载/lottie-66759521.json",
+      "category": "Loci 形象更换加载",
+      "tags": [
+        "波动加载"
+      ]
+    },
+    {
+      "name": "地球、小人、飞机",
+      "file": "./lotties/Loci-生成中/dx2-bd45dcc7.json",
+      "category": "Loci 生成中",
+      "tags": [
+        "循环动效"
+      ]
+    },
+    {
+      "name": "新 Loci 形象、完成提示",
+      "file": "./lotties/Loci-生成完成/celebration-fireworks-designed-lottie-e129597b.json",
+      "category": "Loci 生成完成",
+      "tags": [
+        "生成完成动效（重",
+        "强视觉）"
+      ]
+    },
+    {
+      "name": "新 Loci 形象、完成提示",
+      "file": "./lotties/Loci-生成完成/celebration-fireworks-floating-hold-lottie-5f48a0e6.json",
+      "category": "Loci 生成完成",
+      "tags": [
+        "生成完成动效（重",
+        "强视觉）"
+      ]
+    },
+    {
+      "name": "新 Loci 形象、完成提示",
+      "file": "./lotties/Loci-生成完成/celebration-fireworks-floating-hold-lottie-80707e2b.json",
+      "category": "Loci 生成完成",
+      "tags": [
+        "生成完成动效（重",
+        "强视觉）"
+      ]
+    },
+    {
+      "name": "sample-loader",
+      "file": "./lotties/sample-loader.json",
+      "category": "未分类",
+      "tags": []
+    }
+  ]
+}

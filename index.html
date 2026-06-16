@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lottie 动效预览库</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@2.0.8/dist/lottie-player.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Motion Library</p>
+        <h1>Lottie 动效预览库</h1>
+      </div>
+      <div class="stats" aria-live="polite">
+        <span id="count">0</span>
+        <span>个动效</span>
+      </div>
+    </header>
+
+    <section class="quick-section" aria-label="快速预览">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Quick Preview</p>
+          <h2>快速预览</h2>
+        </div>
+        <span id="quickHint">点击任意动效查看详情</span>
+      </div>
+      <div id="quickRail" class="quick-rail"></div>
+    </section>
+
+    <main class="layout">
+      <details class="sidebar" aria-label="筛选和导入" open>
+        <summary>筛选与播放设置</summary>
+        <label class="field">
+          <span>搜索</span>
+          <input id="search" type="search" placeholder="名称、标签或文件名" autocomplete="off" />
+        </label>
+
+        <label class="field">
+          <span>分类</span>
+          <select id="category">
+            <option value="all">全部分类</option>
+          </select>
+        </label>
+
+        <div class="field">
+          <span>播放速度</span>
+          <div class="speed-row">
+            <input id="speed" type="range" min="0.25" max="3" step="0.25" value="1" />
+            <output id="speedLabel">1x</output>
+          </div>
+        </div>
+
+        <label class="toggle">
+          <input id="autoplay" type="checkbox" checked />
+          <span>自动播放</span>
+        </label>
+
+        <label class="toggle">
+          <input id="loop" type="checkbox" checked />
+          <span>循环播放</span>
+        </label>
+
+        <section class="dropzone" id="dropzone">
+          <input id="fileInput" type="file" accept=".json,application/json" multiple />
+          <strong>拖入 JSON 临时预览</strong>
+          <span>不会写入文件，仅在当前页面展示</span>
+        </section>
+      </details>
+
+      <section class="content">
+        <div class="toolbar">
+          <div class="tabs" role="tablist" aria-label="显示模式">
+            <button class="tab active" type="button" data-view="grid">网格</button>
+            <button class="tab" type="button" data-view="list">列表</button>
+          </div>
+          <button id="refresh" class="icon-button" type="button" title="重新读取清单" aria-label="重新读取清单">↻</button>
+        </div>
+
+        <div id="empty" class="empty" hidden>
+          <h2>还没有找到 Lottie 文件</h2>
+          <p>把 JSON 放进 <code>lotties/</code>，运行 <code>npm run manifest</code> 后刷新页面。</p>
+        </div>
+
+        <div id="gallery" class="gallery"></div>
+      </section>
+    </main>
+
+    <template id="motionCard">
+      <article class="motion-card">
+        <div class="preview">
+          <lottie-player background="transparent"></lottie-player>
+        </div>
+        <div class="motion-meta">
+          <div>
+            <h2></h2>
+            <p class="path"></p>
+          </div>
+          <span class="badge"></span>
+        </div>
+        <div class="tags"></div>
+        <div class="actions">
+          <button type="button" data-action="play">播放</button>
+          <button type="button" data-action="pause">暂停</button>
+          <button type="button" data-action="detail">查看</button>
+          <button type="button" data-action="copy">复制路径</button>
+          <a target="_blank" rel="noreferrer">打开 JSON</a>
+        </div>
+      </article>
+    </template>
+
+    <template id="quickCard">
+      <button class="quick-card" type="button">
+        <lottie-player background="transparent" autoplay loop></lottie-player>
+        <span></span>
+      </button>
+    </template>
+
+    <dialog id="detailDialog" class="detail-dialog" aria-labelledby="detailTitle">
+      <div class="detail-shell">
+        <header class="detail-header">
+          <div>
+            <p class="eyebrow">Detail Preview</p>
+            <h2 id="detailTitle"></h2>
+            <p id="detailPath" class="path"></p>
+          </div>
+          <button id="detailClose" class="icon-button" type="button" aria-label="关闭">×</button>
+        </header>
+
+        <div class="detail-body">
+          <div class="detail-preview">
+            <lottie-player id="detailPlayer" background="transparent"></lottie-player>
+          </div>
+
+          <aside class="detail-controls" aria-label="详情控制">
+            <button id="detailPlay" type="button">播放</button>
+            <button id="detailPause" type="button">暂停</button>
+
+            <label class="field">
+              <span>播放速度</span>
+              <div class="speed-row">
+                <input id="detailSpeed" type="range" min="0.25" max="3" step="0.25" value="1" />
+                <output id="detailSpeedLabel">1x</output>
+              </div>
+            </label>
+
+            <label class="toggle">
+              <input id="detailLoop" type="checkbox" checked />
+              <span>循环播放</span>
+            </label>
+
+            <div id="detailTags" class="tags"></div>
+            <button id="detailCopy" type="button">复制路径</button>
+            <a id="detailOpen" target="_blank" rel="noreferrer">打开 JSON</a>
+          </aside>
+        </div>
+      </div>
+    </dialog>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>

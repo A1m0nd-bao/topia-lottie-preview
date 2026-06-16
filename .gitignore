@@ -1,0 +1,5 @@
+.DS_Store
+*.download
+.sync/
+lark-sync.config.json
+node_modules/
