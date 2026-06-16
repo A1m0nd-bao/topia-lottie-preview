@@ -531,6 +531,12 @@ lottie-player {
   padding: 0;
   background: transparent;
   border: 0;
+  overflow: hidden;
+}
+
+.detail-dialog[open] {
+  display: grid;
+  place-items: stretch;
 }
 
 .detail-dialog::backdrop {
@@ -540,6 +546,8 @@ lottie-player {
 
 .detail-shell {
   overflow: hidden;
+  width: 100%;
+  max-height: inherit;
   color: var(--ink);
   background: #10141b;
   border: 1px solid var(--line-strong);
@@ -761,10 +769,31 @@ code {
 
   .detail-body {
     grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 14px;
   }
 
   .detail-preview {
-    min-height: 300px;
+    min-height: 240px;
+  }
+
+  .detail-dialog {
+    width: calc(100vw - 24px);
+    max-height: calc(100vh - 24px);
+  }
+
+  .detail-shell {
+    max-height: calc(100vh - 24px);
+    overflow: auto;
+  }
+
+  .detail-header {
+    padding: 16px 14px;
+  }
+
+  .detail-preview lottie-player {
+    width: min(84%, 320px);
+    height: min(84%, 320px);
   }
 
   .gallery.list .motion-card {
