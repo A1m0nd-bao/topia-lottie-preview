@@ -34,6 +34,14 @@ npm run sync:watch
 
 同步器会轮询表格，发现 `JSON文件` 列出现新的飞书文件链接或 file token 后，自动下载到 `lotties/`，并重新生成 `manifest.json`。
 
+如果当前目录已连接 GitHub Pages 仓库，可以使用：
+
+```bash
+npm run sync:watch:publish
+```
+
+它会在发现新 JSON 后自动提交并推送 `lotties/` 和 `manifest.json`，GitHub Pages 随后发布更新。
+
 ## 团队协作建议
 
 - 每个动效一个稳定文件名，例如 `login-success.json`。

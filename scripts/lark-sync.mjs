@@ -9,12 +9,13 @@ const configPath = join(root, "lark-sync.config.json");
 
 async function main() {
   const watch = process.argv.includes("--watch");
+  const publish = process.argv.includes("--publish");
   const config = await loadConfig();
 
   if (watch) {
-    await syncOnce(config);
+    await syncOnce(config, { publish });
     setInterval(() => {
-      syncOnce(config).catch((error) => {
+      syncOnce(config, { publish }).catch((error) => {
         console.error(`[lark-sync] ${error.message}`);
       });
     }, config.pollSeconds * 1000);
@@ -22,10 +23,10 @@ async function main() {
     return;
   }
 
-  await syncOnce(config);
+  await syncOnce(config, { publish });
 }
 
-async function syncOnce(config) {
+async function syncOnce(config, options = {}) {
   const state = await loadState(config.stateFile);
   const rows = await readSheet(config);
   const entries = parseRows(rows, config);
@@ -64,9 +65,24 @@ async function syncOnce(config) {
   if (changed) {
     await saveState(config.stateFile, state);
     await run("node", ["./scripts/generate-manifest.mjs"], { cwd: root });
+    if (options.publish) await publishChanges();
   } else {
     console.log("[lark-sync] No new JSON files.");
   }
+}
+
+async function publishChanges() {
+  await run("git", ["add", "lotties", "manifest.json"], { cwd: root });
+  const status = await run("git", ["status", "--short", "lotties", "manifest.json"], { cwd: root });
+  if (!status.trim()) {
+    console.log("[lark-sync] Nothing to publish.");
+    return;
+  }
+
+  const stamp = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
+  await run("git", ["commit", "-m", `Sync Lottie files ${stamp}`], { cwd: root });
+  await run("git", ["push"], { cwd: root });
+  console.log("[lark-sync] Published changes to GitHub Pages.");
 }
 
 async function loadConfig() {

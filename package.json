@@ -2,7 +2,9 @@
   "scripts": {
     "manifest": "node ./scripts/generate-manifest.mjs",
     "sync:once": "node ./scripts/lark-sync.mjs",
+    "sync:once:publish": "node ./scripts/lark-sync.mjs --publish",
     "sync:watch": "node ./scripts/lark-sync.mjs --watch",
+    "sync:watch:publish": "node ./scripts/lark-sync.mjs --watch --publish",
     "start": "python3 -m http.server 4173"
   }
 }
