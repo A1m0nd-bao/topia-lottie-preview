@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Lottie 动效预览库</title>
-    <link rel="stylesheet" href="./styles.css?v=timeline-20260617" />
+    <link rel="stylesheet" href="./styles.css?v=timeline-under-preview-20260617" />
     <script src="https://unpkg.com/@lottiefiles/lottie-player@2.0.8/dist/lottie-player.js"></script>
   </head>
   <body>
@@ -130,8 +130,18 @@
         </header>
 
         <div class="detail-body">
-          <div class="detail-preview">
-            <lottie-player id="detailPlayer" background="transparent"></lottie-player>
+          <div class="detail-stage">
+            <div class="detail-preview">
+              <lottie-player id="detailPlayer" background="transparent"></lottie-player>
+            </div>
+
+            <div class="detail-timeline" aria-label="动效时间轴">
+              <div class="timeline-readout">
+                <span><strong id="detailCurrentFrame">--</strong>/<span id="detailTotalFrames">--</span> 帧</span>
+                <span><strong id="detailCurrentTime">--</strong>/<span id="detailTotalDuration">--</span></span>
+              </div>
+              <input id="detailTimeline" type="range" min="0" max="0" step="1" value="0" aria-label="时间轴" disabled />
+            </div>
           </div>
 
           <aside class="detail-controls" aria-label="详情控制">
@@ -151,14 +161,6 @@
               <span>循环播放</span>
             </label>
 
-            <div class="detail-timeline" aria-label="动效时间轴">
-              <div class="timeline-readout">
-                <span><strong id="detailCurrentFrame">--</strong>/<span id="detailTotalFrames">--</span> 帧</span>
-                <span><strong id="detailCurrentTime">--</strong>/<span id="detailTotalDuration">--</span></span>
-              </div>
-              <input id="detailTimeline" type="range" min="0" max="0" step="1" value="0" aria-label="时间轴" disabled />
-            </div>
-
             <div id="detailTags" class="tags"></div>
             <button id="detailCopy" type="button">复制路径</button>
             <a id="detailOpen" target="_blank" rel="noreferrer">打开 JSON</a>
@@ -167,6 +169,6 @@
       </div>
     </dialog>
 
-    <script src="./app.js?v=timeline-20260617" type="module"></script>
+    <script src="./app.js?v=timeline-under-preview-20260617" type="module"></script>
   </body>
 </html>
