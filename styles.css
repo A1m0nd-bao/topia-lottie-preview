@@ -526,8 +526,8 @@ lottie-player {
 }
 
 .detail-dialog {
-  width: min(1060px, calc(100vw - 32px));
-  max-height: min(780px, calc(100vh - 32px));
+  width: min(1180px, calc(100vw - 28px));
+  max-height: min(840px, calc(100vh - 28px));
   padding: 0;
   background: transparent;
   border: 0;
@@ -571,7 +571,7 @@ lottie-player {
 
 .detail-body {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 270px;
+  grid-template-columns: minmax(0, 1fr) 230px;
   gap: 18px;
   padding: 18px;
 }
@@ -581,7 +581,7 @@ lottie-player {
   contain: layout paint;
   display: grid;
   place-items: center;
-  min-height: 460px;
+  min-height: min(64vh, 590px);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 8px;
 }
@@ -590,8 +590,8 @@ lottie-player {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: min(88%, 540px);
-  height: min(88%, 540px);
+  width: min(94%, 760px);
+  height: min(94%, 760px);
   transform: translate(-50%, -50%);
 }
 
@@ -774,7 +774,7 @@ code {
   }
 
   .detail-preview {
-    min-height: 240px;
+    min-height: min(48vh, 360px);
   }
 
   .detail-dialog {
@@ -792,8 +792,8 @@ code {
   }
 
   .detail-preview lottie-player {
-    width: min(84%, 320px);
-    height: min(84%, 320px);
+    width: min(92%, 360px);
+    height: min(92%, 360px);
   }
 
   .gallery.list .motion-card {

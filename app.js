@@ -164,13 +164,14 @@ function syncPlayers() {
   }
 }
 
-function openDetail(motion) {
+async function openDetail(motion) {
   activeMotion = motion;
   const title = motion.name || filenameToName(motion.file);
   detailTitle.textContent = title;
   detailPath.textContent = motion.file;
   detailPath.title = motion.file;
-  detailPlayer.setAttribute("src", motion.file);
+  detailPlayer.pause();
+  detailPlayer.removeAttribute("src");
   detailPlayer.setSpeed(Number(detailSpeed.value));
   detailPlayer.toggleAttribute("loop", detailLoop.checked);
   detailOpen.href = motion.file;
@@ -184,6 +185,8 @@ function openDetail(motion) {
   }
 
   detailDialog.showModal();
+  await nextFrame();
+  await loadDetailAnimation(motion.file);
   detailPlayer.play();
 }
 
@@ -191,6 +194,23 @@ function syncDetailPlayer() {
   detailSpeedLabel.textContent = `${detailSpeed.value}x`;
   detailPlayer.setSpeed(Number(detailSpeed.value));
   detailPlayer.toggleAttribute("loop", detailLoop.checked);
+}
+
+async function loadDetailAnimation(file) {
+  detailPlayer.setAttribute("src", file);
+
+  if (typeof detailPlayer.load === "function") {
+    try {
+      await detailPlayer.load(file);
+      return;
+    } catch {
+      detailPlayer.setAttribute("src", file);
+    }
+  }
+}
+
+function nextFrame() {
+  return new Promise((resolve) => window.requestAnimationFrame(resolve));
 }
 
 function filenameToName(file) {
