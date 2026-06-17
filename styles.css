@@ -628,6 +628,36 @@ lottie-player {
   color: var(--ink);
 }
 
+.detail-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 0;
+}
+
+.detail-stats div {
+  min-width: 0;
+  padding: 10px;
+  background: #11161e;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.detail-stats dt {
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.detail-stats dd {
+  margin: 0;
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
 .empty {
   display: grid;
   gap: 8px;

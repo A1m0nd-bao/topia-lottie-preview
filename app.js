@@ -25,12 +25,15 @@ const detailSpeed = document.querySelector("#detailSpeed");
 const detailSpeedLabel = document.querySelector("#detailSpeedLabel");
 const detailLoop = document.querySelector("#detailLoop");
 const detailTags = document.querySelector("#detailTags");
+const detailFrames = document.querySelector("#detailFrames");
+const detailDuration = document.querySelector("#detailDuration");
 const detailCopy = document.querySelector("#detailCopy");
 const detailOpen = document.querySelector("#detailOpen");
 
 let motions = [];
 let visibleMotions = [];
 let activeMotion = null;
+const motionInfoCache = new Map();
 
 if (window.matchMedia("(max-width: 820px)").matches) {
   sidebar.removeAttribute("open");
@@ -170,6 +173,8 @@ async function openDetail(motion) {
   detailTitle.textContent = title;
   detailPath.textContent = motion.file;
   detailPath.title = motion.file;
+  detailFrames.textContent = "--";
+  detailDuration.textContent = "--";
   detailPlayer.pause();
   detailPlayer.removeAttribute("src");
   detailPlayer.setSpeed(Number(detailSpeed.value));
@@ -185,6 +190,7 @@ async function openDetail(motion) {
   }
 
   detailDialog.showModal();
+  updateDetailInfo(motion.file);
   await nextFrame();
   await loadDetailAnimation(motion.file);
   detailPlayer.play();
@@ -211,6 +217,40 @@ async function loadDetailAnimation(file) {
 
 function nextFrame() {
   return new Promise((resolve) => window.requestAnimationFrame(resolve));
+}
+
+async function updateDetailInfo(file) {
+  try {
+    const info = await getMotionInfo(file);
+    if (activeMotion?.file !== file) return;
+    detailFrames.textContent = info.frames.toLocaleString();
+    detailDuration.textContent = `${formatSeconds(info.duration)}s`;
+  } catch {
+    if (activeMotion?.file !== file) return;
+    detailFrames.textContent = "未知";
+    detailDuration.textContent = "未知";
+  }
+}
+
+async function getMotionInfo(file) {
+  if (motionInfoCache.has(file)) return motionInfoCache.get(file);
+
+  const response = await fetch(file);
+  if (!response.ok) throw new Error("Unable to read lottie json");
+  const data = await response.json();
+  const frameRate = Number(data.fr) || 0;
+  const inPoint = Number(data.ip) || 0;
+  const outPoint = Number(data.op) || 0;
+  const frames = Math.max(0, Math.round(outPoint - inPoint));
+  const duration = frameRate > 0 ? frames / frameRate : 0;
+  const info = { frames, duration };
+  motionInfoCache.set(file, info);
+  return info;
+}
+
+function formatSeconds(value) {
+  if (!Number.isFinite(value)) return "0.00";
+  return value >= 10 ? value.toFixed(1) : value.toFixed(2);
 }
 
 function filenameToName(file) {
