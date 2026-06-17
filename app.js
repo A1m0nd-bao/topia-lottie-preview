@@ -25,14 +25,20 @@ const detailSpeed = document.querySelector("#detailSpeed");
 const detailSpeedLabel = document.querySelector("#detailSpeedLabel");
 const detailLoop = document.querySelector("#detailLoop");
 const detailTags = document.querySelector("#detailTags");
-const detailFrames = document.querySelector("#detailFrames");
-const detailDuration = document.querySelector("#detailDuration");
+const detailTimeline = document.querySelector("#detailTimeline");
+const detailCurrentFrame = document.querySelector("#detailCurrentFrame");
+const detailTotalFrames = document.querySelector("#detailTotalFrames");
+const detailCurrentTime = document.querySelector("#detailCurrentTime");
+const detailTotalDuration = document.querySelector("#detailTotalDuration");
 const detailCopy = document.querySelector("#detailCopy");
 const detailOpen = document.querySelector("#detailOpen");
 
 let motions = [];
 let visibleMotions = [];
 let activeMotion = null;
+let activeMotionInfo = null;
+let detailAnimationItem = null;
+let timelineRaf = 0;
 const motionInfoCache = new Map();
 
 if (window.matchMedia("(max-width: 820px)").matches) {
@@ -173,8 +179,9 @@ async function openDetail(motion) {
   detailTitle.textContent = title;
   detailPath.textContent = motion.file;
   detailPath.title = motion.file;
-  detailFrames.textContent = "--";
-  detailDuration.textContent = "--";
+  stopTimelineLoop();
+  resetTimeline();
+  detailAnimationItem = null;
   detailPlayer.pause();
   detailPlayer.removeAttribute("src");
   detailPlayer.setSpeed(Number(detailSpeed.value));
@@ -194,6 +201,7 @@ async function openDetail(motion) {
   await nextFrame();
   await loadDetailAnimation(motion.file);
   detailPlayer.play();
+  startTimelineLoop();
 }
 
 function syncDetailPlayer() {
@@ -208,10 +216,27 @@ async function loadDetailAnimation(file) {
   if (typeof detailPlayer.load === "function") {
     try {
       await detailPlayer.load(file);
+      await captureDetailAnimationItem();
       return;
     } catch {
       detailPlayer.setAttribute("src", file);
     }
+  }
+
+  await nextFrame();
+  await captureDetailAnimationItem();
+}
+
+async function captureDetailAnimationItem() {
+  if (typeof detailPlayer.getLottie !== "function") {
+    detailAnimationItem = null;
+    return;
+  }
+
+  try {
+    detailAnimationItem = await detailPlayer.getLottie();
+  } catch {
+    detailAnimationItem = null;
   }
 }
 
@@ -223,12 +248,10 @@ async function updateDetailInfo(file) {
   try {
     const info = await getMotionInfo(file);
     if (activeMotion?.file !== file) return;
-    detailFrames.textContent = info.frames.toLocaleString();
-    detailDuration.textContent = `${formatSeconds(info.duration)}s`;
+    applyMotionInfo(info);
   } catch {
     if (activeMotion?.file !== file) return;
-    detailFrames.textContent = "未知";
-    detailDuration.textContent = "未知";
+    resetTimeline("未知");
   }
 }
 
@@ -243,9 +266,78 @@ async function getMotionInfo(file) {
   const outPoint = Number(data.op) || 0;
   const frames = Math.max(0, Math.round(outPoint - inPoint));
   const duration = frameRate > 0 ? frames / frameRate : 0;
-  const info = { frames, duration };
+  const info = { frameRate, inPoint, outPoint, frames, duration };
   motionInfoCache.set(file, info);
   return info;
+}
+
+function resetTimeline(label = "--") {
+  activeMotionInfo = null;
+  detailTimeline.disabled = true;
+  detailTimeline.min = "0";
+  detailTimeline.max = "0";
+  detailTimeline.value = "0";
+  detailCurrentFrame.textContent = label;
+  detailTotalFrames.textContent = label;
+  detailCurrentTime.textContent = label;
+  detailTotalDuration.textContent = label;
+}
+
+function applyMotionInfo(info) {
+  activeMotionInfo = info;
+  detailTimeline.disabled = info.frames <= 0;
+  detailTimeline.min = "0";
+  detailTimeline.max = String(info.frames);
+  detailTimeline.value = "0";
+  detailTotalFrames.textContent = info.frames.toLocaleString();
+  detailTotalDuration.textContent = `${formatSeconds(info.duration)}s`;
+  updateTimelineLabels(0);
+}
+
+function updateTimelineLabels(frame) {
+  if (!activeMotionInfo) return;
+  const safeFrame = Math.min(activeMotionInfo.frames, Math.max(0, Math.round(frame)));
+  const currentSeconds = activeMotionInfo.frameRate > 0 ? safeFrame / activeMotionInfo.frameRate : 0;
+  detailCurrentFrame.textContent = safeFrame.toLocaleString();
+  detailCurrentTime.textContent = `${formatSeconds(currentSeconds)}s`;
+  detailTimeline.value = String(safeFrame);
+}
+
+function seekDetailFrame(frame) {
+  const targetFrame = Number(frame);
+  if (!Number.isFinite(targetFrame)) return;
+
+  detailPlayer.pause();
+  stopTimelineLoop();
+
+  if (detailAnimationItem && typeof detailAnimationItem.goToAndStop === "function") {
+    detailAnimationItem.goToAndStop(targetFrame, true);
+  } else if (typeof detailPlayer.seek === "function") {
+    detailPlayer.seek(targetFrame);
+  }
+
+  updateTimelineLabels(targetFrame);
+}
+
+function startTimelineLoop() {
+  stopTimelineLoop();
+
+  const tick = () => {
+    if (activeMotionInfo) {
+      const frame = Number(detailAnimationItem?.currentFrame ?? detailTimeline.value);
+      updateTimelineLabels(frame);
+    }
+
+    timelineRaf = window.requestAnimationFrame(tick);
+  };
+
+  timelineRaf = window.requestAnimationFrame(tick);
+}
+
+function stopTimelineLoop() {
+  if (!timelineRaf) return;
+  window.cancelAnimationFrame(timelineRaf);
+  timelineRaf = 0;
 }
 
 function formatSeconds(value) {
@@ -289,10 +381,17 @@ autoplay.addEventListener("change", syncPlayers);
 loop.addEventListener("change", syncPlayers);
 fileInput.addEventListener("change", (event) => addLocalFiles(event.target.files));
 detailClose.addEventListener("click", () => detailDialog.close());
-detailPlay.addEventListener("click", () => detailPlayer.play());
-detailPause.addEventListener("click", () => detailPlayer.pause());
+detailPlay.addEventListener("click", () => {
+  detailPlayer.play();
+  startTimelineLoop();
+});
+detailPause.addEventListener("click", () => {
+  detailPlayer.pause();
+  stopTimelineLoop();
+});
 detailSpeed.addEventListener("input", syncDetailPlayer);
 detailLoop.addEventListener("change", syncDetailPlayer);
+detailTimeline.addEventListener("input", (event) => seekDetailFrame(event.target.value));
 
 detailCopy.addEventListener("click", async () => {
   if (!activeMotion) return;
@@ -309,6 +408,7 @@ detailDialog.addEventListener("click", (event) => {
 
 detailDialog.addEventListener("close", () => {
   detailPlayer.pause();
+  stopTimelineLoop();
 });
 
 dropzone.addEventListener("dragover", (event) => {

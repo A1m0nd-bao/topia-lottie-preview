@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Lottie 动效预览库</title>
-    <link rel="stylesheet" href="./styles.css?v=detail-preview-20260617" />
+    <link rel="stylesheet" href="./styles.css?v=timeline-20260617" />
     <script src="https://unpkg.com/@lottiefiles/lottie-player@2.0.8/dist/lottie-player.js"></script>
   </head>
   <body>
@@ -151,16 +151,13 @@
               <span>循环播放</span>
             </label>
 
-            <dl class="detail-stats" aria-label="动效信息">
-              <div>
-                <dt>帧数</dt>
-                <dd id="detailFrames">--</dd>
+            <div class="detail-timeline" aria-label="动效时间轴">
+              <div class="timeline-readout">
+                <span><strong id="detailCurrentFrame">--</strong>/<span id="detailTotalFrames">--</span> 帧</span>
+                <span><strong id="detailCurrentTime">--</strong>/<span id="detailTotalDuration">--</span></span>
               </div>
-              <div>
-                <dt>持续时间</dt>
-                <dd id="detailDuration">--</dd>
-              </div>
-            </dl>
+              <input id="detailTimeline" type="range" min="0" max="0" step="1" value="0" aria-label="时间轴" disabled />
+            </div>
 
             <div id="detailTags" class="tags"></div>
             <button id="detailCopy" type="button">复制路径</button>
@@ -170,6 +167,6 @@
       </div>
     </dialog>
 
-    <script src="./app.js?v=detail-stats-20260617" type="module"></script>
+    <script src="./app.js?v=timeline-20260617" type="module"></script>
   </body>
 </html>
