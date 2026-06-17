@@ -106,6 +106,7 @@ async function syncOnce(config, options = {}) {
     if (options.publish) await publishChanges();
   } else {
     console.log("[lark-sync] No new JSON files.");
+    if (options.publish) await pushPendingCommits();
   }
 }
 
@@ -127,6 +128,7 @@ async function publishChanges() {
   const status = await run("git", ["status", "--short", "lotties", "manifest.json"], { cwd: root });
   if (!status.trim()) {
     console.log("[lark-sync] Nothing to publish.");
+    await pushPendingCommits();
     return;
   }
 
@@ -134,6 +136,19 @@ async function publishChanges() {
   await run("git", ["commit", "-m", `Sync Lottie files ${stamp}`], { cwd: root });
   await run("git", ["push"], { cwd: root });
   console.log("[lark-sync] Published changes to GitHub Pages.");
+}
+
+async function pushPendingCommits() {
+  let pending = "0";
+  try {
+    pending = await run("git", ["rev-list", "--count", "@{u}..HEAD"], { cwd: root });
+  } catch {
+    return;
+  }
+
+  if (Number(pending.trim()) <= 0) return;
+  await run("git", ["push"], { cwd: root });
+  console.log("[lark-sync] Published pending commits to GitHub Pages.");
 }
 
 async function loadConfig() {
