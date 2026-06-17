@@ -5,6 +5,7 @@
   "headerRow": 1,
   "rowStart": 2,
   "rowEnd": 200,
+  "pruneMissing": true,
   "identity": "user",
   "pollSeconds": 30,
   "columns": {

@@ -1,4 +1,4 @@
-import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { basename, dirname, extname, join } from "node:path";
 import { spawn } from "node:child_process";
@@ -30,6 +30,9 @@ async function syncOnce(config, options = {}) {
   const state = await loadState(config.stateFile);
   const rows = await readSheet(config);
   const entries = parseRows(rows, config);
+  const activeSourceIds = new Set(
+    entries.flatMap((entry) => entry.files.map((fileRef) => fileRef.token || fileRef.url).filter(Boolean)),
+  );
   let changed = false;
 
   for (const entry of entries) {
@@ -59,6 +62,7 @@ async function syncOnce(config, options = {}) {
       const nextState = {
         token,
         output,
+        slot: fileRef.slot,
         rowNumber: entry.rowNumber,
         name: entry.name,
         category: entry.category,
@@ -76,6 +80,26 @@ async function syncOnce(config, options = {}) {
     }
   }
 
+  if (config.pruneMissing) {
+    const activeOutputs = new Set(
+      Object.entries(state.synced || {})
+        .filter(([sourceId]) => activeSourceIds.has(sourceId))
+        .map(([, item]) => item.output)
+        .filter(Boolean),
+    );
+    for (const [sourceId, item] of Object.entries(state.synced || {})) {
+      if (activeSourceIds.has(sourceId)) continue;
+
+      delete state.synced[sourceId];
+      changed = true;
+      console.log(`[lark-sync] Removed stale attachment: ${item.output || sourceId}`);
+
+      if (item.output && !activeOutputs.has(item.output)) {
+        await removeSyncedFile(item.output, config.outputDir);
+      }
+    }
+  }
+
   if (changed) {
     await saveState(config.stateFile, state);
     await run("node", ["./scripts/generate-manifest.mjs"], { cwd: root });
@@ -89,6 +113,7 @@ function hasStateChanged(current, next) {
   return (
     current.token !== next.token ||
     current.output !== next.output ||
+    current.slot !== next.slot ||
     current.rowNumber !== next.rowNumber ||
     current.name !== next.name ||
     current.category !== next.category ||
@@ -132,6 +157,7 @@ async function loadConfig() {
   }
   if (!config.identity) config.identity = "user";
   if (!config.pollSeconds) config.pollSeconds = 30;
+  if (config.pruneMissing == null) config.pruneMissing = true;
   if (!config.outputDir) config.outputDir = "lotties";
   if (!config.stateFile) config.stateFile = ".sync/lark-state.json";
   if (!config.columns?.file) {
@@ -172,7 +198,12 @@ function parseRows(rows, config) {
     if (config.rowStart && rowNumber < config.rowStart) return [];
     if (config.rowEnd && rowNumber > config.rowEnd) return [];
 
-    const files = columnIndex.files.flatMap((fileIndex) => extractFileRefs(row[fileIndex]));
+    const files = columnIndex.files.flatMap((fileIndex) =>
+      extractFileRefs(row[fileIndex]).map((fileRef, refIndex) => ({
+        ...fileRef,
+        slot: `${rowNumber}:${fileIndex}:${refIndex}`,
+      })),
+    );
     if (files.length === 0) return [];
 
     return {
@@ -295,10 +326,16 @@ async function downloadJson(token, outputPath, identity) {
 
 async function removeIfExists(filePath) {
   try {
-    await import("node:fs/promises").then(({ rm }) => rm(filePath));
+    await rm(filePath);
   } catch {
     // Missing temp files are fine.
   }
+}
+
+async function removeSyncedFile(output, outputDir) {
+  const normalized = output.replaceAll("\\", "/");
+  if (!normalized.startsWith(`${outputDir.replaceAll("\\", "/")}/`)) return;
+  await removeIfExists(join(root, normalized));
 }
 
 async function assertJson(filePath) {
