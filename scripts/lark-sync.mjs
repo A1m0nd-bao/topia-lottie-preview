@@ -99,6 +99,11 @@ async function loadConfig() {
   }
   if (!config.range) config.range = "A1:H200";
   if (!config.headerRow) config.headerRow = 1;
+  if (config.rowStart != null) config.rowStart = Number(config.rowStart);
+  if (config.rowEnd != null) config.rowEnd = Number(config.rowEnd);
+  if (config.rowStart && config.rowEnd && config.rowStart > config.rowEnd) {
+    throw new Error("Config rowStart cannot be greater than rowEnd.");
+  }
   if (!config.identity) config.identity = "user";
   if (!config.pollSeconds) config.pollSeconds = 30;
   if (!config.outputDir) config.outputDir = "lotties";
@@ -137,11 +142,15 @@ function parseRows(rows, config) {
   }
 
   return rows.slice(headerIndex + 1).flatMap((row, index) => {
+    const rowNumber = headerIndex + index + 2;
+    if (config.rowStart && rowNumber < config.rowStart) return [];
+    if (config.rowEnd && rowNumber > config.rowEnd) return [];
+
     const files = columnIndex.files.flatMap((fileIndex) => extractFileRefs(row[fileIndex]));
     if (files.length === 0) return [];
 
     return {
-      rowNumber: headerIndex + index + 2,
+      rowNumber,
       name: readCell(row, columnIndex.name),
       category: readCell(row, columnIndex.category) || "未分类",
       tags: splitTags(readCell(row, columnIndex.tags)),

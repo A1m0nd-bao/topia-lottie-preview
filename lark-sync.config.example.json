@@ -3,6 +3,8 @@
   "sheetId": "",
   "range": "A1:H200",
   "headerRow": 1,
+  "rowStart": 2,
+  "rowEnd": 200,
   "identity": "user",
   "pollSeconds": 30,
   "columns": {

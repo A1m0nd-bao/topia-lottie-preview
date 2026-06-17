@@ -17,6 +17,7 @@ cp lark-sync.config.example.json lark-sync.config.json
 ```
 
 2. 在 `lark-sync.config.json` 里填入飞书表格 URL、工作表 ID、读取范围和列名。
+   `rowStart` / `rowEnd` 可以限制实际处理的数据行，行号按飞书表格左侧真实行号计算；读取范围仍建议包含表头行。
 
 推荐表头：
 
