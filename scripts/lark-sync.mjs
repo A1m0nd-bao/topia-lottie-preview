@@ -35,7 +35,7 @@ async function syncOnce(config, options = {}) {
   for (const entry of entries) {
     for (const fileRef of entry.files) {
       const sourceId = fileRef.token || fileRef.url;
-      if (!sourceId || state.synced[sourceId]) continue;
+      if (!sourceId) continue;
 
       const token = fileRef.token || (await inspectUrl(fileRef.url, config.identity));
       if (!token) {
@@ -43,22 +43,36 @@ async function syncOnce(config, options = {}) {
         continue;
       }
 
-      const fileName = buildFileName(entry, fileRef, token);
-      const categoryDir = slugify(entry.category) || "未分类";
-      const outputPath = join(root, config.outputDir, categoryDir, fileName);
-      await downloadJson(token, outputPath, config.identity);
-      await assertJson(outputPath);
+      const existing = state.synced[sourceId];
+      let output = existing?.output;
 
-      state.synced[sourceId] = {
+      if (!existing) {
+        const fileName = buildFileName(entry, fileRef, token);
+        const categoryDir = slugify(entry.category) || "未分类";
+        const outputPath = join(root, config.outputDir, categoryDir, fileName);
+        await downloadJson(token, outputPath, config.identity);
+        await assertJson(outputPath);
+        output = relativePath(outputPath);
+        console.log(`[lark-sync] Synced ${output}`);
+      }
+
+      const nextState = {
         token,
-        output: relativePath(outputPath),
+        output,
+        rowNumber: entry.rowNumber,
         name: entry.name,
         category: entry.category,
         tags: entry.tags,
-        syncedAt: new Date().toISOString(),
+        fileName: fileRef.name || "",
+        syncedAt: existing?.syncedAt || new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
-      changed = true;
-      console.log(`[lark-sync] Synced ${relativePath(outputPath)}`);
+
+      if (!existing || hasStateChanged(existing, nextState)) {
+        state.synced[sourceId] = nextState;
+        changed = true;
+        if (existing) console.log(`[lark-sync] Updated metadata for row ${entry.rowNumber}: ${output}`);
+      }
     }
   }
 
@@ -69,6 +83,18 @@ async function syncOnce(config, options = {}) {
   } else {
     console.log("[lark-sync] No new JSON files.");
   }
+}
+
+function hasStateChanged(current, next) {
+  return (
+    current.token !== next.token ||
+    current.output !== next.output ||
+    current.rowNumber !== next.rowNumber ||
+    current.name !== next.name ||
+    current.category !== next.category ||
+    current.fileName !== next.fileName ||
+    JSON.stringify(current.tags || []) !== JSON.stringify(next.tags || [])
+  );
 }
 
 async function publishChanges() {
