@@ -121,6 +121,14 @@
     },
     {
       "name": "引导开启相机权限",
+      "file": "./lotties/主界面-权限开启/crt-glitch-black-fog-static-b3b1f1d5.json",
+      "category": "主界面-权限开启",
+      "tags": [
+        "未知状态反馈"
+      ]
+    },
+    {
+      "name": "引导开启相机权限",
       "file": "./lotties/主界面-权限开启/pixel-glitch-tv-static-af7fa028.json",
       "category": "主界面-权限开启",
       "tags": [
