@@ -32,6 +32,7 @@ const detailCurrentTime = document.querySelector("#detailCurrentTime");
 const detailTotalDuration = document.querySelector("#detailTotalDuration");
 const detailCopy = document.querySelector("#detailCopy");
 const detailOpen = document.querySelector("#detailOpen");
+const detailDownload = document.querySelector("#detailDownload");
 
 let motions = [];
 let visibleMotions = [];
@@ -121,6 +122,7 @@ function createCard(motion) {
   const badge = node.querySelector(".badge");
   const tags = node.querySelector(".tags");
   const openLink = node.querySelector("a");
+  const downloadLink = node.querySelector(".download-link");
 
   player.setAttribute("src", motion.file);
   player.setAttribute("speed", speed.value);
@@ -132,6 +134,8 @@ function createCard(motion) {
   path.title = motion.file;
   badge.textContent = motion.category || "未分类";
   openLink.href = motion.file;
+  downloadLink.href = motion.file;
+  downloadLink.download = getDownloadName(motion);
 
   for (const tag of motion.tags || []) {
     const tagNode = document.createElement("span");
@@ -187,6 +191,8 @@ async function openDetail(motion) {
   detailPlayer.setSpeed(Number(detailSpeed.value));
   detailPlayer.toggleAttribute("loop", detailLoop.checked);
   detailOpen.href = motion.file;
+  detailDownload.href = motion.file;
+  detailDownload.download = getDownloadName(motion);
   detailTags.replaceChildren();
 
   const tags = motion.tags?.length ? motion.tags : [motion.category || "未分类"];
@@ -353,11 +359,38 @@ function filenameToName(file) {
     .replace(/[-_]+/g, " ");
 }
 
+function getDownloadName(motion) {
+  if (motion.downloadName) return motion.downloadName;
+
+  try {
+    const url = new URL(motion.file, window.location.href);
+    const fileName = decodeURIComponent(url.pathname.split("/").pop() || "");
+    if (fileName.toLowerCase().endsWith(".json")) return fileName;
+  } catch {
+    const fileName = String(motion.file || "").split("/").pop() || "";
+    if (fileName.toLowerCase().endsWith(".json")) return fileName;
+  }
+
+  return `${slugifyFileName(motion.name || "lottie-animation")}.json`;
+}
+
+function slugifyFileName(value) {
+  return String(value)
+    .trim()
+    .replace(/\.json$/i, "")
+    .replace(/[\\/:*?"<>|]+/g, "-")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 80) || "lottie-animation";
+}
+
 function addLocalFiles(files) {
   const jsonFiles = [...files].filter((file) => file.name.toLowerCase().endsWith(".json"));
   const localItems = jsonFiles.map((file) => ({
     name: filenameToName(file.name),
     file: URL.createObjectURL(file),
+    downloadName: file.name,
     category: "临时预览",
     tags: ["local"],
   }));

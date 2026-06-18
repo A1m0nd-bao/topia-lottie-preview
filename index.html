@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Lottie 动效预览库</title>
-    <link rel="stylesheet" href="./styles.css?v=timeline-under-preview-20260617" />
+    <link rel="stylesheet" href="./styles.css?v=download-json-20260618" />
     <script src="https://unpkg.com/@lottiefiles/lottie-player@2.0.8/dist/lottie-player.js"></script>
   </head>
   <body>
@@ -107,6 +107,7 @@
           <button type="button" data-action="detail">查看</button>
           <button type="button" data-action="copy">复制路径</button>
           <a target="_blank" rel="noreferrer">打开 JSON</a>
+          <a class="download-link" download>下载 JSON</a>
         </div>
       </article>
     </template>
@@ -164,11 +165,12 @@
             <div id="detailTags" class="tags"></div>
             <button id="detailCopy" type="button">复制路径</button>
             <a id="detailOpen" target="_blank" rel="noreferrer">打开 JSON</a>
+            <a id="detailDownload" download>下载 JSON</a>
           </aside>
         </div>
       </div>
     </dialog>
 
-    <script src="./app.js?v=timeline-under-preview-20260617" type="module"></script>
+    <script src="./app.js?v=download-json-20260618" type="module"></script>
   </body>
 </html>
