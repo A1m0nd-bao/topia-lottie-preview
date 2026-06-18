@@ -7,6 +7,8 @@ const search = document.querySelector("#search");
 const category = document.querySelector("#category");
 const speed = document.querySelector("#speed");
 const speedLabel = document.querySelector("#speedLabel");
+const previewBg = document.querySelector("#previewBg");
+const previewBgLabel = document.querySelector("#previewBgLabel");
 const autoplay = document.querySelector("#autoplay");
 const loop = document.querySelector("#loop");
 const refresh = document.querySelector("#refresh");
@@ -24,6 +26,8 @@ const detailPause = document.querySelector("#detailPause");
 const detailSpeed = document.querySelector("#detailSpeed");
 const detailSpeedLabel = document.querySelector("#detailSpeedLabel");
 const detailLoop = document.querySelector("#detailLoop");
+const detailPreviewBg = document.querySelector("#detailPreviewBg");
+const detailPreviewBgLabel = document.querySelector("#detailPreviewBgLabel");
 const detailTags = document.querySelector("#detailTags");
 const detailTimeline = document.querySelector("#detailTimeline");
 const detailCurrentFrame = document.querySelector("#detailCurrentFrame");
@@ -41,10 +45,16 @@ let activeMotionInfo = null;
 let detailAnimationItem = null;
 let timelineRaf = 0;
 const motionInfoCache = new Map();
+const previewBackgroundKey = "lottie-preview-bg";
+const defaultPreviewBackground = "#0a0c10";
 
 if (window.matchMedia("(max-width: 820px)").matches) {
   sidebar.removeAttribute("open");
 }
+
+applyPreviewBackground(localStorage.getItem(previewBackgroundKey) || defaultPreviewBackground, {
+  persist: false,
+});
 
 async function loadManifest() {
   try {
@@ -214,6 +224,29 @@ function syncDetailPlayer() {
   detailSpeedLabel.textContent = `${detailSpeed.value}x`;
   detailPlayer.setSpeed(Number(detailSpeed.value));
   detailPlayer.toggleAttribute("loop", detailLoop.checked);
+}
+
+function applyPreviewBackground(value, options = {}) {
+  const color = normalizeHexColor(value) || defaultPreviewBackground;
+  const label = color.toUpperCase();
+  document.documentElement.style.setProperty("--preview-bg", color);
+  previewBg.value = color;
+  detailPreviewBg.value = color;
+  previewBgLabel.textContent = label;
+  detailPreviewBgLabel.textContent = label;
+
+  if (options.persist !== false) {
+    localStorage.setItem(previewBackgroundKey, color);
+  }
+}
+
+function normalizeHexColor(value) {
+  const color = String(value || "").trim();
+  if (/^#[0-9a-f]{6}$/i.test(color)) return color.toLowerCase();
+  if (/^#[0-9a-f]{3}$/i.test(color)) {
+    return `#${color[1]}${color[1]}${color[2]}${color[2]}${color[3]}${color[3]}`.toLowerCase();
+  }
+  return "";
 }
 
 async function loadDetailAnimation(file) {
@@ -410,6 +443,7 @@ speed.addEventListener("input", () => {
   syncPlayers();
 });
 
+previewBg.addEventListener("input", (event) => applyPreviewBackground(event.target.value));
 autoplay.addEventListener("change", syncPlayers);
 loop.addEventListener("change", syncPlayers);
 fileInput.addEventListener("change", (event) => addLocalFiles(event.target.files));
@@ -424,6 +458,7 @@ detailPause.addEventListener("click", () => {
 });
 detailSpeed.addEventListener("input", syncDetailPlayer);
 detailLoop.addEventListener("change", syncDetailPlayer);
+detailPreviewBg.addEventListener("input", (event) => applyPreviewBackground(event.target.value));
 detailTimeline.addEventListener("input", (event) => seekDetailFrame(event.target.value));
 
 detailCopy.addEventListener("click", async () => {

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Lottie 动效预览库</title>
-    <link rel="stylesheet" href="./styles.css?v=download-json-20260618" />
+    <link rel="stylesheet" href="./styles.css?v=preview-bg-20260618" />
     <script src="https://unpkg.com/@lottiefiles/lottie-player@2.0.8/dist/lottie-player.js"></script>
   </head>
   <body>
@@ -52,6 +52,14 @@
             <output id="speedLabel">1x</output>
           </div>
         </div>
+
+        <label class="field">
+          <span>预览背景</span>
+          <div class="color-row">
+            <input id="previewBg" type="color" value="#0a0c10" />
+            <output id="previewBgLabel">#0A0C10</output>
+          </div>
+        </label>
 
         <label class="toggle">
           <input id="autoplay" type="checkbox" checked />
@@ -162,6 +170,14 @@
               <span>循环播放</span>
             </label>
 
+            <label class="field">
+              <span>预览背景</span>
+              <div class="color-row">
+                <input id="detailPreviewBg" type="color" value="#0a0c10" />
+                <output id="detailPreviewBgLabel">#0A0C10</output>
+              </div>
+            </label>
+
             <div id="detailTags" class="tags"></div>
             <button id="detailCopy" type="button">复制路径</button>
             <a id="detailOpen" target="_blank" rel="noreferrer">打开 JSON</a>
@@ -171,6 +187,6 @@
       </div>
     </dialog>
 
-    <script src="./app.js?v=download-json-20260618" type="module"></script>
+    <script src="./app.js?v=preview-bg-20260618" type="module"></script>
   </body>
 </html>
