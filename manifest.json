@@ -104,6 +104,14 @@
       ]
     },
     {
+      "name": "引导开启相机权限",
+      "file": "./lotties/主界面-权限开启/pixel-glitch-tv-static-af7fa028.json",
+      "category": "主界面-权限开启",
+      "tags": [
+        "未知状态反馈"
+      ]
+    },
+    {
       "name": "发布按钮",
       "file": "./lotties/放置完成-发布Loci/observation-mode-success-burst-lottie-3182a276.json",
       "category": "放置完成-发布Loci",
