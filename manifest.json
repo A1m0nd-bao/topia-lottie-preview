@@ -182,6 +182,14 @@
       "tags": [
         "成功动效（轻）"
       ]
+    },
+    {
+      "name": "点赞按钮/点赞后状态",
+      "file": "./lotties/近景观察模式/like-heart-float-248724bd.json",
+      "category": "近景观察模式",
+      "tags": [
+        "点击反馈"
+      ]
     }
   ]
 }
