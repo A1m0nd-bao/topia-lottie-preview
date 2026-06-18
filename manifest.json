@@ -2,6 +2,14 @@
   "items": [
     {
       "name": "Loci 本体",
+      "file": "./lotties/Loci-形象交互/finger-arc-swipe-lottie-d68e76cf.json",
+      "category": "Loci 形象交互",
+      "tags": [
+        "手势引导与反馈"
+      ]
+    },
+    {
+      "name": "Loci 本体",
       "file": "./lotties/Loci-形象交互/pinch-close-gesture-lottie-57855346.json",
       "category": "Loci 形象交互",
       "tags": [
