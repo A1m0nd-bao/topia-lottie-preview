@@ -76,19 +76,23 @@
       ]
     },
     {
-      "name": "新创建的New Loci 图标",
+      "name": "创作功能引导",
       "file": "./lotties/New-Loci-生成完成后主页/teal-hollow-glow-506d1d3e.json",
-      "category": "New Loci 生成完成后主页",
+      "category": "主界面-功能指导",
       "tags": [
-        "引导点击"
+        "突出功能",
+        "原理相同",
+        "做一个就可以"
       ]
     },
     {
-      "name": "新创建的New Loci 图标",
+      "name": "创作功能引导",
       "file": "./lotties/New-Loci-生成完成后主页/teal-hollow-glow-soft-embedded-3e547de1.json",
-      "category": "New Loci 生成完成后主页",
+      "category": "主界面-功能指导",
       "tags": [
-        "引导点击"
+        "突出功能",
+        "原理相同",
+        "做一个就可以"
       ]
     },
     {
