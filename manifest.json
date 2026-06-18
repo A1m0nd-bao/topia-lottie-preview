@@ -104,6 +104,14 @@
       ]
     },
     {
+      "name": "发布按钮",
+      "file": "./lotties/放置完成-发布Loci/observation-mode-success-burst-lottie-3182a276.json",
+      "category": "放置完成-发布Loci",
+      "tags": [
+        "发布成功动效（较重）"
+      ]
+    },
+    {
       "name": "Angry Avatar Loop",
       "file": "./lotties/未分类/angry-shake-loop-84db7466.json",
       "category": "未分类",
