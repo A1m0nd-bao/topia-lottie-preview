@@ -131,7 +131,9 @@
       "name": "phone scanner dot matrix 7f80d9bc",
       "file": "./lotties/扫描周围/phone-scanner-dot-matrix-7f80d9bc.json",
       "category": "扫描周围",
-      "tags": []
+      "tags": [
+        "扫描周围"
+      ]
     },
     {
       "name": "发布按钮",
