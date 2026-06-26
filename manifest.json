@@ -1,20 +1,85 @@
 {
   "items": [
     {
+      "name": "扫描周围",
+      "file": "./lotties/扫描周围/phone-scanner-dot-matrix-7f80d9bc.json",
+      "category": "扫描周围",
+      "tags": [
+        "扫描周围"
+      ],
+      "updatedAt": "2026-06-26T06:47:20.013Z"
+    },
+    {
+      "name": "引导组合",
+      "file": "./lotties/未分类/combined-gestures-lottie-98b580bd.json",
+      "category": "引导组合",
+      "tags": [
+        "引导组合"
+      ],
+      "updatedAt": "2026-06-26T06:47:18.827Z"
+    },
+    {
+      "name": "点赞按钮/点赞后状态",
+      "file": "./lotties/近景观察模式/like-heart-float-248724bd.json",
+      "category": "近景观察模式",
+      "tags": [
+        "点击反馈"
+      ],
+      "updatedAt": "2026-06-26T06:47:17.989Z"
+    },
+    {
+      "name": "Loci Found Light Confetti",
+      "file": "./lotties/未分类/loci-found-light-confetti-lottie-a751e6a9.json",
+      "category": "未分类",
+      "tags": [
+        "成功动效（轻）"
+      ],
+      "updatedAt": "2026-06-26T06:47:17.352Z"
+    },
+    {
+      "name": "发布按钮",
+      "file": "./lotties/放置完成-发布Loci/observation-mode-success-burst-lottie-3182a276.json",
+      "category": "放置完成-发布Loci",
+      "tags": [
+        "发布成功动效（较重）"
+      ],
+      "updatedAt": "2026-06-26T06:47:16.641Z"
+    },
+    {
+      "name": "Loci本体",
+      "file": "./lotties/主界面-信息收集成功/xhs-transparent-burst-lottie-de9974f5.json",
+      "category": "主界面-信息收集成功",
+      "tags": [
+        "成功动效（轻）"
+      ],
+      "updatedAt": "2026-06-26T06:47:15.935Z"
+    },
+    {
+      "name": "Angry Avatar Transition Variant",
+      "file": "./lotties/未分类/calm-to-angry-transition-ef530190.json",
+      "category": "未分类",
+      "tags": [
+        "错误提示"
+      ],
+      "updatedAt": "2026-06-26T06:47:15.353Z"
+    },
+    {
+      "name": "Angry Avatar Loop",
+      "file": "./lotties/未分类/angry-shake-loop-84db7466.json",
+      "category": "未分类",
+      "tags": [
+        "错误提示"
+      ],
+      "updatedAt": "2026-06-26T06:47:14.555Z"
+    },
+    {
       "name": "Loci 本体",
       "file": "./lotties/Loci-形象交互/finger-arc-swipe-lottie-d68e76cf.json",
       "category": "Loci 形象交互",
       "tags": [
         "手势引导与反馈"
-      ]
-    },
-    {
-      "name": "Loci 本体",
-      "file": "./lotties/Loci-形象交互/pinch-close-gesture-lottie-57855346.json",
-      "category": "Loci 形象交互",
-      "tags": [
-        "手势引导与反馈"
-      ]
+      ],
+      "updatedAt": "2026-06-26T06:47:13.946Z"
     },
     {
       "name": "Loci 本体",
@@ -22,7 +87,17 @@
       "category": "Loci 形象交互",
       "tags": [
         "手势引导与反馈"
-      ]
+      ],
+      "updatedAt": "2026-06-26T06:47:13.270Z"
+    },
+    {
+      "name": "Loci 本体",
+      "file": "./lotties/Loci-形象交互/pinch-close-gesture-lottie-57855346.json",
+      "category": "Loci 形象交互",
+      "tags": [
+        "手势引导与反馈"
+      ],
+      "updatedAt": "2026-06-26T06:47:12.478Z"
     },
     {
       "name": "形象加载区域",
@@ -30,41 +105,8 @@
       "category": "Loci 形象更换加载",
       "tags": [
         "波动加载"
-      ]
-    },
-    {
-      "name": "地球、小人、飞机",
-      "file": "./lotties/Loci-生成中/dx2-bd45dcc7.json",
-      "category": "Loci 生成中",
-      "tags": [
-        "循环动效"
-      ]
-    },
-    {
-      "name": "地球、小人、飞机",
-      "file": "./lotties/Loci-生成中/dxxr-b9e9d9f2.json",
-      "category": "Loci 生成中",
-      "tags": [
-        "循环动效"
-      ]
-    },
-    {
-      "name": "新 Loci 形象、完成提示",
-      "file": "./lotties/Loci-生成完成/celebration-fireworks-designed-lottie-e129597b.json",
-      "category": "Loci 生成完成",
-      "tags": [
-        "生成完成动效（重",
-        "强视觉）"
-      ]
-    },
-    {
-      "name": "新 Loci 形象、完成提示",
-      "file": "./lotties/Loci-生成完成/celebration-fireworks-floating-hold-lottie-80707e2b.json",
-      "category": "Loci 生成完成",
-      "tags": [
-        "生成完成动效（重",
-        "强视觉）"
-      ]
+      ],
+      "updatedAt": "2026-06-26T06:47:11.562Z"
     },
     {
       "name": "新 Loci 形象、完成提示",
@@ -73,7 +115,55 @@
       "tags": [
         "生成完成动效（重",
         "强视觉）"
-      ]
+      ],
+      "updatedAt": "2026-06-26T06:47:09.311Z"
+    },
+    {
+      "name": "新 Loci 形象、完成提示",
+      "file": "./lotties/Loci-生成完成/celebration-fireworks-floating-hold-lottie-80707e2b.json",
+      "category": "Loci 生成完成",
+      "tags": [
+        "生成完成动效（重",
+        "强视觉）"
+      ],
+      "updatedAt": "2026-06-26T06:47:08.201Z"
+    },
+    {
+      "name": "新 Loci 形象、完成提示",
+      "file": "./lotties/Loci-生成完成/celebration-fireworks-designed-lottie-e129597b.json",
+      "category": "Loci 生成完成",
+      "tags": [
+        "生成完成动效（重",
+        "强视觉）"
+      ],
+      "updatedAt": "2026-06-26T06:47:07.020Z"
+    },
+    {
+      "name": "地球、小人、飞机",
+      "file": "./lotties/Loci-生成中/dxxr-b9e9d9f2.json",
+      "category": "Loci 生成中",
+      "tags": [
+        "循环动效"
+      ],
+      "updatedAt": "2026-06-26T06:47:06.099Z"
+    },
+    {
+      "name": "地球、小人、飞机",
+      "file": "./lotties/Loci-生成中/dx2-bd45dcc7.json",
+      "category": "Loci 生成中",
+      "tags": [
+        "循环动效"
+      ],
+      "updatedAt": "2026-06-26T06:47:02.638Z"
+    },
+    {
+      "name": "开始创作引导",
+      "file": "./lotties/未分类/heartbeat-plus-icon-10636c64.json",
+      "category": "未分类",
+      "tags": [
+        "功能启动邀请"
+      ],
+      "updatedAt": "2026-06-26T06:46:58.601Z"
     },
     {
       "name": "创作功能引导",
@@ -83,7 +173,8 @@
         "突出功能",
         "原理相同",
         "做一个就可以"
-      ]
+      ],
+      "updatedAt": "2026-06-26T06:46:57.846Z"
     },
     {
       "name": "创作功能引导",
@@ -93,79 +184,8 @@
         "突出功能",
         "原理相同",
         "做一个就可以"
-      ]
-    },
-    {
-      "name": "Loci本体",
-      "file": "./lotties/主界面-信息收集成功/xhs-transparent-burst-lottie-de9974f5.json",
-      "category": "主界面-信息收集成功",
-      "tags": [
-        "成功动效（轻）"
-      ]
-    },
-    {
-      "name": "引导开启相机权限",
-      "file": "./lotties/主界面-权限开启/crt-glitch-black-fog-reveal-552ebb5a.json",
-      "category": "主界面-权限开启",
-      "tags": [
-        "未知状态反馈"
-      ]
-    },
-    {
-      "name": "引导开启相机权限",
-      "file": "./lotties/主界面-权限开启/crt-glitch-black-fog-static-a92ccf8e.json",
-      "category": "主界面-权限开启",
-      "tags": [
-        "未知状态反馈"
-      ]
-    },
-    {
-      "name": "引导开启相机权限",
-      "file": "./lotties/主界面-权限开启/pixel-glitch-tv-static-af7fa028.json",
-      "category": "主界面-权限开启",
-      "tags": [
-        "未知状态反馈"
-      ]
-    },
-    {
-      "name": "phone scanner dot matrix 7f80d9bc",
-      "file": "./lotties/扫描周围/phone-scanner-dot-matrix-7f80d9bc.json",
-      "category": "扫描周围",
-      "tags": [
-        "扫描周围"
-      ]
-    },
-    {
-      "name": "发布按钮",
-      "file": "./lotties/放置完成-发布Loci/observation-mode-success-burst-lottie-3182a276.json",
-      "category": "放置完成-发布Loci",
-      "tags": [
-        "发布成功动效（较重）"
-      ]
-    },
-    {
-      "name": "Angry Avatar Loop",
-      "file": "./lotties/未分类/angry-shake-loop-84db7466.json",
-      "category": "未分类",
-      "tags": [
-        "错误提示"
-      ]
-    },
-    {
-      "name": "Angry Avatar Transition Variant",
-      "file": "./lotties/未分类/calm-to-angry-transition-ef530190.json",
-      "category": "未分类",
-      "tags": [
-        "错误提示"
-      ]
-    },
-    {
-      "name": "Combined Gesture Animations",
-      "file": "./lotties/未分类/combined-gestures-lottie-98b580bd.json",
-      "category": "引导组合",
-      "tags": [
-        "引导组合"
-      ]
+      ],
+      "updatedAt": "2026-06-26T06:46:57.147Z"
     },
     {
       "name": "开启相机权限",
@@ -173,31 +193,35 @@
       "category": "未分类",
       "tags": [
         "权限开启反馈"
-      ]
+      ],
+      "updatedAt": "2026-06-26T06:46:56.188Z"
     },
     {
-      "name": "开始创作引导",
-      "file": "./lotties/未分类/heartbeat-plus-icon-10636c64.json",
-      "category": "未分类",
+      "name": "引导开启相机权限",
+      "file": "./lotties/主界面-权限开启/pixel-glitch-tv-static-af7fa028.json",
+      "category": "主界面-权限开启",
       "tags": [
-        "功能启动邀请"
-      ]
+        "未知状态反馈"
+      ],
+      "updatedAt": "2026-06-26T06:46:54.023Z"
     },
     {
-      "name": "Loci Found Light Confetti",
-      "file": "./lotties/未分类/loci-found-light-confetti-lottie-a751e6a9.json",
-      "category": "未分类",
+      "name": "引导开启相机权限",
+      "file": "./lotties/主界面-权限开启/crt-glitch-black-fog-static-a92ccf8e.json",
+      "category": "主界面-权限开启",
       "tags": [
-        "成功动效（轻）"
-      ]
+        "未知状态反馈"
+      ],
+      "updatedAt": "2026-06-26T06:46:53.120Z"
     },
     {
-      "name": "点赞按钮/点赞后状态",
-      "file": "./lotties/近景观察模式/like-heart-float-248724bd.json",
-      "category": "近景观察模式",
+      "name": "引导开启相机权限",
+      "file": "./lotties/主界面-权限开启/crt-glitch-black-fog-reveal-552ebb5a.json",
+      "category": "主界面-权限开启",
       "tags": [
-        "点击反馈"
-      ]
+        "未知状态反馈"
+      ],
+      "updatedAt": "2026-06-26T06:46:52.315Z"
     }
   ]
 }

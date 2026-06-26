@@ -41,18 +41,27 @@ async function getName(file) {
 const files = await collectJsonFiles(lottieDir);
 const syncMeta = await loadSyncMeta();
 const items = await Promise.all(
-  files.sort().map(async (file) => {
+  files.map(async (file) => {
     const rel = `./${relative(root, file).replaceAll("\\", "/")}`;
     const meta = syncMeta[rel.replace(/^\.\//, "")] || syncMeta[rel];
     const category = relative(lottieDir, file).split(/[\\/]/)[0];
+    const fallbackCategory = meta?.category || (category === basename(file) ? "未分类" : category);
+    const fallbackName = fallbackCategory && fallbackCategory !== "未分类" ? fallbackCategory : await getName(file);
     return {
-      name: meta?.name || (await getName(file)),
+      name: meta?.name || fallbackName,
       file: rel,
-      category: meta?.category || (category === basename(file) ? "未分类" : category),
+      category: fallbackCategory,
       tags: meta?.tags || [],
+      updatedAt: meta?.updatedAt || meta?.syncedAt || "",
     };
   }),
 );
+
+items.sort((left, right) => {
+  const byTime = Date.parse(right.updatedAt || "") - Date.parse(left.updatedAt || "");
+  if (Number.isFinite(byTime) && byTime !== 0) return byTime;
+  return left.file.localeCompare(right.file, "zh-Hans-CN");
+});
 
 await writeFile(manifestPath, `${JSON.stringify({ items }, null, 2)}\n`);
 console.log(`Generated ${relative(root, manifestPath)} with ${items.length} items.`);
