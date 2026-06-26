@@ -128,6 +128,12 @@
       ]
     },
     {
+      "name": "Phone Scanner Dot Matrix",
+      "file": "./lotties/扫描周围/phone-scanner-dot-matrix-ffe22d0d.json",
+      "category": "扫描周围",
+      "tags": []
+    },
+    {
       "name": "发布按钮",
       "file": "./lotties/放置完成-发布Loci/observation-mode-success-burst-lottie-3182a276.json",
       "category": "放置完成-发布Loci",
