@@ -497,6 +497,14 @@ lottie-player {
   white-space: nowrap;
 }
 
+.resolution {
+  margin-top: 5px;
+  color: var(--soft);
+  font-size: 12px;
+  font-weight: 680;
+  line-height: 1.2;
+}
+
 .badge {
   align-self: start;
   max-width: 126px;
@@ -668,6 +676,27 @@ lottie-player {
 .detail-controls a:hover {
   border-color: var(--accent);
   color: var(--ink);
+}
+
+.detail-info {
+  display: grid;
+  gap: 5px;
+  padding: 10px 11px;
+  background: #11161e;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.detail-info span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 720;
+}
+
+.detail-info strong {
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.15;
 }
 
 .detail-timeline {

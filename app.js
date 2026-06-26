@@ -28,6 +28,7 @@ const detailSpeedLabel = document.querySelector("#detailSpeedLabel");
 const detailLoop = document.querySelector("#detailLoop");
 const detailPreviewBg = document.querySelector("#detailPreviewBg");
 const detailPreviewBgLabel = document.querySelector("#detailPreviewBgLabel");
+const detailResolution = document.querySelector("#detailResolution");
 const detailTags = document.querySelector("#detailTags");
 const detailTimeline = document.querySelector("#detailTimeline");
 const detailCurrentFrame = document.querySelector("#detailCurrentFrame");
@@ -129,6 +130,7 @@ function createCard(motion) {
   const player = node.querySelector("lottie-player");
   const title = node.querySelector("h2");
   const path = node.querySelector(".path");
+  const resolution = node.querySelector(".resolution");
   const badge = node.querySelector(".badge");
   const tags = node.querySelector(".tags");
   const openLink = node.querySelector("a");
@@ -142,10 +144,12 @@ function createCard(motion) {
   title.textContent = motion.name || filenameToName(motion.file);
   path.textContent = motion.file;
   path.title = motion.file;
+  resolution.textContent = "分辨率 --";
   badge.textContent = motion.category || "未分类";
   openLink.href = motion.file;
   downloadLink.href = motion.file;
   downloadLink.download = getDownloadName(motion);
+  updateResolution(motion.file, resolution);
 
   for (const tag of motion.tags || []) {
     const tagNode = document.createElement("span");
@@ -195,6 +199,7 @@ async function openDetail(motion) {
   detailPath.title = motion.file;
   stopTimelineLoop();
   resetTimeline();
+  detailResolution.textContent = "--";
   detailAnimationItem = null;
   detailPlayer.pause();
   detailPlayer.removeAttribute("src");
@@ -288,9 +293,20 @@ async function updateDetailInfo(file) {
     const info = await getMotionInfo(file);
     if (activeMotion?.file !== file) return;
     applyMotionInfo(info);
+    detailResolution.textContent = formatResolution(info);
   } catch {
     if (activeMotion?.file !== file) return;
     resetTimeline("未知");
+    detailResolution.textContent = "未知";
+  }
+}
+
+async function updateResolution(file, node) {
+  try {
+    const info = await getMotionInfo(file);
+    node.textContent = `分辨率 ${formatResolution(info)}`;
+  } catch {
+    node.textContent = "分辨率 未知";
   }
 }
 
@@ -303,11 +319,18 @@ async function getMotionInfo(file) {
   const frameRate = Number(data.fr) || 0;
   const inPoint = Number(data.ip) || 0;
   const outPoint = Number(data.op) || 0;
+  const width = Number(data.w) || 0;
+  const height = Number(data.h) || 0;
   const frames = Math.max(0, Math.round(outPoint - inPoint));
   const duration = frameRate > 0 ? frames / frameRate : 0;
-  const info = { frameRate, inPoint, outPoint, frames, duration };
+  const info = { frameRate, inPoint, outPoint, width, height, frames, duration };
   motionInfoCache.set(file, info);
   return info;
+}
+
+function formatResolution(info) {
+  if (!info?.width || !info?.height) return "未知";
+  return `${Math.round(info.width).toLocaleString()} × ${Math.round(info.height).toLocaleString()}`;
 }
 
 function resetTimeline(label = "--") {

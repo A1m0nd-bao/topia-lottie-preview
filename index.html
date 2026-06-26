@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Lottie 动效预览库</title>
-    <link rel="stylesheet" href="./styles.css?v=preview-bg-20260618" />
+    <link rel="stylesheet" href="./styles.css?v=resolution-20260626" />
     <script src="https://unpkg.com/@lottiefiles/lottie-player@2.0.8/dist/lottie-player.js"></script>
   </head>
   <body>
@@ -105,6 +105,7 @@
           <div>
             <h2></h2>
             <p class="path"></p>
+            <p class="resolution">分辨率 --</p>
           </div>
           <span class="badge"></span>
         </div>
@@ -178,6 +179,11 @@
               </div>
             </label>
 
+            <div class="detail-info" aria-label="动效信息">
+              <span>分辨率</span>
+              <strong id="detailResolution">--</strong>
+            </div>
+
             <div id="detailTags" class="tags"></div>
             <button id="detailCopy" type="button">复制路径</button>
             <a id="detailOpen" target="_blank" rel="noreferrer">打开 JSON</a>
@@ -187,6 +193,6 @@
       </div>
     </dialog>
 
-    <script src="./app.js?v=preview-bg-20260618" type="module"></script>
+    <script src="./app.js?v=resolution-20260626" type="module"></script>
   </body>
 </html>
