@@ -54,7 +54,7 @@ async function syncOnce(config, options = {}) {
         const categoryDir = slugify(entry.category) || "未分类";
         const outputPath = join(root, config.outputDir, categoryDir, fileName);
         await downloadJson(token, outputPath, config.identity);
-        await assertJson(outputPath);
+        await ensureJsonFile(outputPath);
         output = relativePath(outputPath);
         console.log(`[lark-sync] Synced ${output}`);
       }
@@ -353,9 +353,54 @@ async function removeSyncedFile(output, outputDir) {
   await removeIfExists(join(root, normalized));
 }
 
-async function assertJson(filePath) {
+async function ensureJsonFile(filePath) {
+  try {
+    await parseJsonFile(filePath);
+    return;
+  } catch (error) {
+    if (!(await isZipFile(filePath))) throw error;
+  }
+
+  const content = await extractLottieJson(filePath);
+  JSON.parse(content);
+  await writeFile(filePath, content.endsWith("\n") ? content : `${content}\n`);
+  console.log(`[lark-sync] Extracted JSON from package: ${relativePath(filePath)}`);
+}
+
+async function parseJsonFile(filePath) {
   const content = await readFile(filePath, "utf8");
   JSON.parse(content);
+}
+
+async function isZipFile(filePath) {
+  const buffer = await readFile(filePath);
+  return buffer.length >= 4 && buffer[0] === 0x50 && buffer[1] === 0x4b && buffer[2] === 0x03 && buffer[3] === 0x04;
+}
+
+async function extractLottieJson(filePath) {
+  const listOutput = await run("unzip", ["-Z1", filePath], { cwd: root });
+  const entries = listOutput
+    .split("\n")
+    .map((item) => item.trim())
+    .filter(Boolean);
+  const candidates = [
+    ...entries.filter((item) => /^animations\/.+\.json$/i.test(item)),
+    ...entries.filter((item) => /\.json$/i.test(item) && !/^manifest\.json$/i.test(item)),
+  ];
+
+  for (const entry of candidates) {
+    const content = await run("unzip", ["-p", filePath, entry], { cwd: root });
+    try {
+      const data = JSON.parse(content);
+      if (data && typeof data === "object" && ("layers" in data || "fr" in data || "v" in data)) {
+        return content;
+      }
+    } catch {
+      // Keep looking for a valid animation JSON inside the package.
+    }
+  }
+
+  throw new Error(`No Lottie JSON found inside package ${relativePath(filePath)}`);
 }
 
 function buildFileName(entry, fileRef, token) {
