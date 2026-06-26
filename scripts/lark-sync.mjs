@@ -54,9 +54,12 @@ async function syncOnce(config, options = {}) {
         const categoryDir = slugify(entry.category) || "未分类";
         const outputPath = join(root, config.outputDir, categoryDir, fileName);
         await downloadJson(token, outputPath, config.identity);
-        await ensureJsonFile(outputPath);
         output = relativePath(outputPath);
         console.log(`[lark-sync] Synced ${output}`);
+      } else if (hasRemoteFileChanged(existing, fileRef)) {
+        const outputPath = join(root, output);
+        await downloadJson(token, outputPath, config.identity);
+        console.log(`[lark-sync] Updated file content for row ${entry.rowNumber}: ${output}`);
       }
 
       const nextState = {
@@ -68,6 +71,7 @@ async function syncOnce(config, options = {}) {
         category: entry.category,
         tags: entry.tags,
         fileName: fileRef.name || "",
+        fileSize: fileRef.size || 0,
         syncedAt: existing?.syncedAt || new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
@@ -119,8 +123,15 @@ function hasStateChanged(current, next) {
     current.name !== next.name ||
     current.category !== next.category ||
     current.fileName !== next.fileName ||
+    Number(current.fileSize || 0) !== Number(next.fileSize || 0) ||
     JSON.stringify(current.tags || []) !== JSON.stringify(next.tags || [])
   );
+}
+
+function hasRemoteFileChanged(existing, fileRef) {
+  const currentSize = Number(existing?.fileSize || 0);
+  const nextSize = Number(fileRef?.size || 0);
+  return nextSize > 0 && currentSize !== nextSize;
 }
 
 async function publishChanges() {
@@ -293,7 +304,8 @@ function extractFileRefs(cell) {
       const token = value.fileToken || value.file_token || value.token;
       const url = value.url || value.link;
       const name = value.name || value.file_name || value.text;
-      if (token || url) refs.push({ token, url, name });
+      const size = Number(value.size || value.file_size || 0);
+      if (token || url) refs.push({ token, url, name, size });
       Object.values(value).forEach(visit);
     }
   };
@@ -336,6 +348,7 @@ async function downloadJson(token, outputPath, identity) {
     ],
     { cwd: root },
   );
+  await ensureJsonFile(tempPath);
   await rename(tempPath, outputPath);
 }
 
