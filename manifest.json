@@ -2,12 +2,12 @@
   "items": [
     {
       "name": "扫描周围",
-      "file": "./lotties/扫描周围/scene-1-df0dd83b.json",
+      "file": "./lotties/扫描周围/topia-fixed-dot-scanner-22b38971.json",
       "category": "扫描周围",
       "tags": [
         "扫描周围"
       ],
-      "updatedAt": "2026-06-26T08:09:56.713Z"
+      "updatedAt": "2026-06-26T12:26:23.186Z"
     },
     {
       "name": "引导组合",
