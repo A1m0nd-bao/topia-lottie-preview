@@ -48,6 +48,14 @@ let timelineRaf = 0;
 const motionInfoCache = new Map();
 const previewBackgroundKey = "lottie-preview-bg";
 const defaultPreviewBackground = "#0a0c10";
+const lazyPlayerObserver =
+  "IntersectionObserver" in window
+    ? new IntersectionObserver(handlePlayerVisibility, {
+        root: null,
+        rootMargin: "360px",
+        threshold: 0.01,
+      })
+    : null;
 
 if (window.matchMedia("(max-width: 820px)").matches) {
   sidebar.removeAttribute("open");
@@ -99,6 +107,7 @@ function render() {
     return matchesSearch && matchesCategory;
   });
 
+  lazyPlayerObserver?.disconnect();
   gallery.replaceChildren();
   quickRail.replaceChildren();
   count.textContent = String(visibleMotions.length);
@@ -117,7 +126,7 @@ function createQuickCard(motion) {
   const player = node.querySelector("lottie-player");
   const label = node.querySelector("span");
 
-  player.setAttribute("src", motion.file);
+  setupPreviewPlayer(player, motion.file);
   label.textContent = motion.name || filenameToName(motion.file);
   node.title = `${label.textContent} - ${motion.category || "未分类"}`;
   node.addEventListener("click", () => openDetail(motion));
@@ -136,10 +145,7 @@ function createCard(motion) {
   const openLink = node.querySelector("a");
   const downloadLink = node.querySelector(".download-link");
 
-  player.setAttribute("src", motion.file);
-  player.setAttribute("speed", speed.value);
-  if (autoplay.checked) player.setAttribute("autoplay", "");
-  if (loop.checked) player.setAttribute("loop", "");
+  setupPreviewPlayer(player, motion.file);
 
   title.textContent = motion.name || filenameToName(motion.file);
   path.textContent = motion.file;
@@ -149,7 +155,6 @@ function createCard(motion) {
   openLink.href = motion.file;
   downloadLink.href = motion.file;
   downloadLink.download = getDownloadName(motion);
-  updateResolution(motion.file, resolution);
 
   for (const tag of motion.tags || []) {
     const tagNode = document.createElement("span");
@@ -165,7 +170,10 @@ function createCard(motion) {
       return;
     }
 
-    if (action === "play") player.play();
+    if (action === "play") {
+      loadPreviewPlayer(player);
+      player.play();
+    }
     if (action === "pause") player.pause();
     if (action === "detail") openDetail(motion);
     if (action === "copy") {
@@ -181,14 +189,77 @@ function createCard(motion) {
 }
 
 function syncPlayers() {
-  const players = document.querySelectorAll(".gallery lottie-player");
+  const players = document.querySelectorAll(".gallery lottie-player, .quick-rail lottie-player");
   for (const player of players) {
+    syncPreviewPlayer(player);
+  }
+}
+
+function setupPreviewPlayer(player, file) {
+  player.dataset.src = file;
+  player.dataset.loaded = "false";
+  player.dataset.visible = "false";
+  player.removeAttribute("src");
+  player.removeAttribute("autoplay");
+  player.setAttribute("loading", "lazy");
+  player.setSpeed?.(Number(speed.value));
+  player.toggleAttribute("loop", loop.checked);
+
+  if (lazyPlayerObserver) {
+    lazyPlayerObserver.observe(player);
+    return;
+  }
+
+  player.dataset.visible = "true";
+  loadPreviewPlayer(player);
+  syncPreviewPlayer(player);
+  updateVisibleCardResolution(player);
+}
+
+function handlePlayerVisibility(entries) {
+  for (const entry of entries) {
+    const player = entry.target;
+    player.dataset.visible = entry.isIntersecting ? "true" : "false";
+
+    if (entry.isIntersecting) {
+      loadPreviewPlayer(player);
+      syncPreviewPlayer(player);
+      updateVisibleCardResolution(player);
+    } else {
+      player.pause?.();
+    }
+  }
+}
+
+function loadPreviewPlayer(player) {
+  if (player.dataset.loaded === "true") return;
+  const src = player.dataset.src;
+  if (!src) return;
+
+  player.setAttribute("src", src);
+  player.dataset.loaded = "true";
+}
+
+function syncPreviewPlayer(player) {
+  if (player.dataset.loaded !== "true" && autoplay.checked && player.dataset.visible === "true") {
+    loadPreviewPlayer(player);
+  }
+
+  if (player.dataset.loaded === "true") {
     player.setSpeed(Number(speed.value));
     player.toggleAttribute("loop", loop.checked);
-    player.toggleAttribute("autoplay", autoplay.checked);
-    if (autoplay.checked) player.play();
-    if (!autoplay.checked) player.stop();
   }
+
+  const shouldPlay = autoplay.checked && player.dataset.visible === "true";
+  if (shouldPlay) player.play?.();
+  if (!shouldPlay) player.pause?.();
+}
+
+function updateVisibleCardResolution(player) {
+  const resolution = player.closest(".motion-card")?.querySelector(".resolution");
+  if (!resolution || resolution.dataset.loaded === "true") return;
+  resolution.dataset.loaded = "true";
+  updateResolution(player.dataset.src, resolution);
 }
 
 async function openDetail(motion) {
