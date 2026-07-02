@@ -1,6 +1,24 @@
 {
   "items": [
     {
+      "name": "星星交互",
+      "file": "./lotties/星星交互/lottie-12866bf5.json",
+      "category": "星星交互",
+      "tags": [
+        "星星交互"
+      ],
+      "updatedAt": "2026-07-02T05:14:59.179Z"
+    },
+    {
+      "name": "星星旋转",
+      "file": "./lotties/星星旋转/star-loader-lottie-536f4511.json",
+      "category": "星星旋转",
+      "tags": [
+        "星星旋转"
+      ],
+      "updatedAt": "2026-07-02T05:14:58.512Z"
+    },
+    {
       "name": "扫描周围",
       "file": "./lotties/扫描周围/topia-fixed-dot-scanner-22b38971.json",
       "category": "扫描周围",
