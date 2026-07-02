@@ -48,6 +48,7 @@ let timelineRaf = 0;
 const motionInfoCache = new Map();
 const previewBackgroundKey = "lottie-preview-bg";
 const defaultPreviewBackground = "#0a0c10";
+const previewPosterFrameRatio = 0.35;
 const lazyPlayerObserver =
   "IntersectionObserver" in window
     ? new IntersectionObserver(handlePlayerVisibility, {
@@ -199,11 +200,14 @@ function setupPreviewPlayer(player, file) {
   player.dataset.src = file;
   player.dataset.loaded = "false";
   player.dataset.visible = "false";
+  player.dataset.posterReady = "false";
   player.removeAttribute("src");
   player.removeAttribute("autoplay");
   player.setAttribute("loading", "lazy");
   player.setSpeed?.(Number(speed.value));
   player.toggleAttribute("loop", loop.checked);
+  player.addEventListener("ready", () => showPreviewPoster(player));
+  player.addEventListener("load", () => showPreviewPoster(player));
 
   if (lazyPlayerObserver) {
     lazyPlayerObserver.observe(player);
@@ -238,6 +242,17 @@ function loadPreviewPlayer(player) {
 
   player.setAttribute("src", src);
   player.dataset.loaded = "true";
+
+  if (typeof player.load === "function") {
+    Promise.resolve(player.load(src))
+      .then(() => {
+        showPreviewPoster(player);
+        syncPreviewPlayer(player);
+      })
+      .catch(() => {
+        player.setAttribute("src", src);
+      });
+  }
 }
 
 function syncPreviewPlayer(player) {
@@ -252,7 +267,29 @@ function syncPreviewPlayer(player) {
 
   const shouldPlay = autoplay.checked && player.dataset.visible === "true";
   if (shouldPlay) player.play?.();
-  if (!shouldPlay) player.pause?.();
+  if (!shouldPlay) {
+    player.pause?.();
+    showPreviewPoster(player);
+  }
+}
+
+async function showPreviewPoster(player) {
+  if (player.dataset.loaded !== "true" || player.dataset.posterReady === "true") return;
+  if (autoplay.checked && player.dataset.visible === "true") return;
+  if (typeof player.getLottie !== "function") return;
+
+  try {
+    const animation = await player.getLottie();
+    const totalFrames = Number(animation?.totalFrames) || Number(animation?.animationData?.op) || 0;
+    if (!totalFrames || player.dataset.posterReady === "true") return;
+
+    const frame = Math.max(1, Math.floor(totalFrames * previewPosterFrameRatio));
+    animation.goToAndStop(frame, true);
+    player.dataset.posterReady = "true";
+  } catch {
+    // Some custom-element load paths report readiness before the animation object exists.
+    window.setTimeout(() => showPreviewPoster(player), 120);
+  }
 }
 
 function updateVisibleCardResolution(player) {
